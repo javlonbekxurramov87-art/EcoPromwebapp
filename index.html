@@ -1,0 +1,1613 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ecoprom Shop — Telegram WebApp</title>
+  <meta name="description" content="Ecoprom — eshiklar, qurilish materiallari va konditsionerlar do‘koni. Zamonaviy, tez va animatsion UI." />
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Ecoprom Shop — Qurilish va eshik mahsulotlari">
+  <meta property="og:description" content="Eng sifatli qurilish mahsulotlari va eshiklar!">
+  <meta property="og:image" content="https://i.ibb.co/fzW6FrTg/2.png">
+  <link rel="canonical" href="https://ecoprom-shop.uz/webapp" /> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      --green-500:#00c853;
+      --green-700:#0aa05a;
+      --bg:#f6fbf7;
+      --card:#fff;
+      --muted:#6b7280;
+      --glass: rgba(255,255,255,0.6);
+      --radius:14px;
+      --shadow: 0 8px 24px rgba(16,24,40,0.08);
+      --glass-border: rgba(0,0,0,0.04);
+      --max-width:1200px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:linear-gradient(180deg,var(--bg),#eefaf0 60%);color:#111827;-webkit-font-smoothing:antialiased}
+    html, body {
+        height: 100%; 
+        margin: 0;
+        padding: 0;
+        /* Asosiy oynada skrollni oʻchiramiz, chunki biz uni kontentga oʻtkazamiz */
+        overflow: hidden; 
+    }
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        /* Vertikal skrollni yoqish */
+        overflow-y: auto; 
+        /* iOS qurilmalarida skrollni silliqlashtiradi */
+        -webkit-overflow-scrolling: touch; 
+    }
+    header{position:sticky;top:0;z-index:120;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.75);backdrop-filter:blur(6px);border-bottom:1px solid var(--glass-border)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--green-500),var(--green-700));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-family:Orbitron}
+    .shop-title{font-weight:700;font-size:18px}
+    .header-controls{display:flex;align-items:center;gap:10px}
+    .lang-select{position:relative}
+    .lang-btn{background:var(--card);border:1px solid var(--glass-border);padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:600}
+    .lang-menu{position:absolute;top:110%;left:0;background:var(--card);box-shadow:var(--shadow);border-radius:8px;overflow:hidden;display:none;z-index:20}
+    .lang-menu button{display:block;width:100%;padding:8px 12px;border:0;background:none;text-align:left;cursor:pointer}
+    .cart-bubble{position:relative;background:linear-gradient(90deg,var(--green-500),var(--green-700));color:white;padding:8px 12px;border-radius:14px;display:flex;gap:8px;align-items:center;cursor:pointer}
+    .cart-bubble .count{background:rgba(255,255,255,0.15);padding:4px 8px;border-radius:999px;font-weight:700}
+
+    /* categories carousel */
+    .categories-wrap{padding:12px 0;background:transparent}
+    .categories{display:flex;gap:10px;padding:6px 18px;border-radius:12px;margin:0 auto;max-width:var(--max-width);align-items:center;overflow-x:auto;position:relative} /* Overflow-x:auto for manual scrolling */
+    .cat-track{display:flex;gap:10px;align-items:center;white-space:nowrap;will-change:transform}
+    .categories button{white-space:nowrap;background:transparent;border:1px solid transparent;padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:600;transition:transform .22s,background .22s}
+    .categories button.active{background:linear-gradient(90deg,var(--green-500),var(--green-700));color:white;transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,200,83,0.12)}
+    /* Shadows are removed for manual scroll optimization */
+    .categories::after,.categories::before{display:none} 
+
+    /* search area */
+    .search-wrap{display:flex;justify-content:center;padding:10px 16px}
+    .search{width:100%;max-width:var(--max-width);display:flex;gap:10px;background:var(--card);border-radius:12px;padding:10px;border:1px solid var(--glass-border);align-items:center}
+    .search input{border:0;outline:0;padding:6px 8px;width:100%;font-weight:600}
+
+    /* container and grid */
+    .container{padding:10px 16px 90px;max-width:var(--max-width);margin:0 auto}
+    .top-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+    .card{background:linear-gradient(180deg,var(--card),#fff);border-radius:14px;padding:10px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;position:relative;overflow:visible;transition:transform .18s,box-shadow .18s}
+    .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(16,24,40,0.12)}
+    .media{height:150px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#f6fff6,#ecfff0)}
+    .media img{width:100%;height:100%;object-fit:cover}
+    .card h4{margin:0;font-size:15px}
+    .muted{color:var(--muted);font-size:13px}
+    .price-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .price{font-weight:800}
+    .actions{display:flex;gap:8px}
+    .btn{background:var(--green-500);border:0;color:white;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:700}
+    .btn.ghost{background:transparent;border:1px solid var(--glass-border);color:var(--green-700)}
+
+    .fav{position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.9);padding:8px;border-radius:10px;border:1px solid var(--glass-border);cursor:pointer;transition:transform .12s}
+    .fav.active{transform:scale(1.05);color:var(--green-700)}
+
+    /* modal */
+    .modal{display:none;position:fixed;inset:0;background:rgba(4,10,6,0.45);backdrop-filter:blur(4px);z-index:300;align-items:center;justify-content:center;padding:18px;overflow:auto}
+    .modal-content{width:1440px;max-width:820px;max-height: 190vh;background:var(--card);border-radius:16px;padding:18px;box-shadow:0 20px 60px rgba(5,10,6,0.2) }
+    .modal-grid{display:grid;grid-template-columns:1fr 360px;gap:14px}
+    /* shop.html faylidagi <style> blokida */
+    .modal-content > div:last-child > div:nth-child(5) { 
+        /* Agar siz o'zingiz qo'shimcha style qo'shgan bo'lsangiz */
+        white-space: pre-wrap;
+        /* ... va max-height/overflow ham tekshirilishi kerak */
+    }
+
+    /* Yoki ushbu: */
+    #modalExtraDesc {
+        margin-top: 10px;
+        white-space: pre-wrap; /* Matnni yangi qatorlar bilan ko'rsatadi */
+        color: var(--muted);
+    }
+    /* === SLIDER CSS START === */
+    .slides{
+        height:360px;
+        border-radius:12px;
+        overflow:hidden;
+        background:#f8fff9;
+        position:relative; /* Relative for absolute controls */
+        cursor: grab; /* Swipe qilish mumkinligini bildirish */
+    }
+    .slide-wrapper{
+        display:flex;
+        width:100%;
+        height:100%;
+        transition: transform 0.3s ease-in-out;
+        /* 🛠️ YANGI QO'SHILDI: GPU tezlatish (Hardware Acceleration) */
+        will-change: transform; 
+    }
+    .slide{
+        min-width:100%;
+        height:100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        overflow:hidden;
+    }
+    .slide img{width:100%;height:100%;object-fit:cover}
+    
+    .slide-controls{
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        pointer-events:none;
+        padding:0 8px;
+    }
+    .slide-control-btn{
+        background:rgba(0,0,0,0.4);
+        border:none;
+        color:white;
+        width:36px;
+        height:36px;
+        border-radius:50%;
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        transition: background 0.2s;
+        font-size:16px;
+        pointer-events:all;
+        backdrop-filter: blur(2px);
+    }
+    .slide-control-btn:hover{
+        background:var(--green-500);
+    }
+    .slide-control-btn:disabled{
+        opacity: 0.5;
+        cursor: default;
+        background: rgba(0,0,0,0.4);
+    }
+    
+    .slide-indicators{
+        position:absolute;
+        bottom:8px;
+        left:0;
+        right:0;
+        display:flex;
+        justify-content:center;
+        gap:6px;
+    }
+    .slide-indicator{
+        width:8px;
+        height:8px;
+        background:rgba(255,255,255,0.7);
+        border-radius:50%;
+        transition: background 0.3s;
+    }
+    .slide-indicator.active{
+        background:var(--green-500);
+        box-shadow: 0 0 4px rgba(0,0,0,0.3);
+    }
+    /* === SLIDER CSS END === */
+
+    .specs{margin-top:8px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+    .spec{display:flex;justify-content:space-between;color:var(--muted);padding:6px 0;border-bottom:1px dashed #f0f0f0}
+
+    /* cart modal list */
+    .cart-item{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0}
+    .cart-media{width:60px;height:60px;border-radius:8px;overflow:hidden;background:var(--bg)}
+    .cart-media img{width:100%;height:100%;object-fit:cover}
+    .cart-info{flex:1}
+
+    /* floating cart */
+    .cart-panel{position:fixed;right:14px;bottom:14px;background:linear-gradient(90deg,var(--green-500),var(--green-700));color:white;padding:12px 14px;border-radius:12px;box-shadow:0 12px 30px rgba(0,200,83,0.18);display:flex;align-items:center;gap:10px;cursor:pointer;z-index:220}
+
+    /* responsive */
+    @media (max-width:920px){ 
+      .modal-grid{grid-template-columns:1fr} 
+      .slides{height:220px} /* 🛠️ O'zgartirildi: 260px dan 220px ga */
+      .media{height:120px} 
+    }
+    @media (max-width:520px){
+      .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))} header{padding:10px} .shop-title{display:none}
+      .categories::after,.categories::before{display:none}
+      .slides{height:180px} /* 🛠️ O'zgartirildi: 220px dan 180px ga */
+    }
+
+    /* small helpers */
+    .empty-state{text-align:center;padding:36px;color:var(--muted)}
+    .badge{font-weight:700;padding:4px 8px;border-radius:8px;background:#f3f4f6;color:#374151}
+    /* smooth selection disable */
+    button:focus{outline:0}
+    /* Notification style for showTinyNotif */
+    #tiny-notif { transition: opacity 0.5s ease-out; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="logo">EP</div>
+      <div>
+        <div class="shop-title" id="shopTitle">Ecoprom</div>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <div class="lang-select">
+        <button class="lang-btn" id="langBtn">🇺🇿 O‘z ▾</button>
+        <div class="lang-menu" id="langMenu" role="menu" aria-hidden="true">
+          <button onclick="setLang('uz')">🇺🇿 O‘zbekcha</button>
+          <button onclick="setLang('ru')">🇷🇺 Русский</button>
+          <button onclick="setLang('en')">🇬🇧 English</button>
+        </div>
+      </div>
+
+      <div class="cart-bubble" id="cartCount" title="Savatcha" onclick="openCartModal()">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <div class="count" id="cartNumber">0</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="categories-wrap">
+    <div class="categories" id="categoryBar" aria-hidden="false">
+      <div class="cat-track" id="catTrack">
+        <button class="active" data-cat="all" onclick="filterCategory('all', event)">🔹 <span data-i18n="all">Barchasi</span></button>
+        <button data-cat="eshik" onclick="filterCategory('eshik', event)">🚪 <span data-i18n="doors">Eshiklar</span></button>
+        <button data-cat="qurilish" onclick="filterCategory('qurilish', event)">🏠 <span data-i18n="build">Qurilish</span></button>
+        <button data-cat="konditsioner" onclick="filterCategory('konditsioner', event)">❄️ <span data-i18n="ac">Konditsioner</span></button>
+        <button data-cat="panel" onclick="filterCategory('panel', event)">🪟 <span data-i18n="panel">Panellar</span></button>
+        </div>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search" role="search">
+      <i class="fa-solid fa-magnifying-glass" style="opacity:.6"></i>
+      <input id="searchInput" placeholder="Mahsulot qidirish..." aria-label="Mahsulot qidirish..." />
+      <button class="btn ghost" onclick="clearFilters()" title="Tozalash"><i class="fa-solid fa-eraser"></i></button>
+    </div>
+  </div>
+
+  <main class="container" id="main">
+    <div class="top-row">
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn ghost" id="favViewBtn" onclick="viewFavorites()"><i class="fa-regular fa-heart"></i> <span data-i18n="favorites">Sevimlilar</span></button>
+      </div>
+    </div>
+
+    <div class="grid" id="productList" aria-live="polite"></div>
+  </main>
+
+  <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+      <div style="display:flex;justify-content:flex-end"><button class="btn ghost" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="modal-grid">
+        <div class="slides" id="slides">
+          </div>
+        <div>
+          <h3 id="modalName">Product</h3>
+          <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
+            <div class="price" id="modalPrice">0</div> 
+            <div class="muted"><span data-i18n="in_stock_label">Omborda</span>: <span id="modalStock">—</span></div>
+          </div>
+          <p id="modalShort" class="muted" style="margin-top:8px"></p>
+
+          <div id="modalOptions"></div> <div class="specs" id="modalSpecs"></div>
+
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+            <div style="display:flex;gap:6px;align-items:center">
+              <button class="btn ghost" onclick="updateModalQty(-1)">-</button>
+              <div id="modalQty" style="min-width:28px;text-align:center;font-weight:800">1</div>
+              <button class="btn ghost" onclick="updateModalQty(1)">+</button>
+            </div>
+
+            <button class="btn" id="modalAddBtn" onclick="modalAddToCart()"><span data-i18n="add_to_cart">Savatchaga qo‘shish</span></button>
+            <button class="btn ghost" id="modalFavBtn" onclick="modalToggleFav()"><i class="fa-regular fa-heart"></i> <span data-i18n="to_favorites">Sevimlilarga</span></button>
+          </div>
+
+          <div style="margin-top:10px;white-space:pre-wrap;color:var(--muted)" id="modalExtraDesc"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="cartModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h3><span data-i18n="your_cart">🛒 Savatingiz</span></h3>
+        <button class="btn ghost" onclick="closeCartModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="cartList" style="max-height:320px;overflow:auto"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:8px;border-top:1px solid #f0f0f0">
+        <div class="muted"><span data-i18n="total">Jami</span>:</div>
+        <div id="cartTotal" style="font-weight:800">0</div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:10px">
+        <button class="btn" id="checkoutBtn" onclick="checkout()"><span data-i18n="checkout">Buyurtma berish</span></button>
+        <button class="btn ghost" onclick="continueShopping()"><span data-i18n="continue_shopping">Davom etish</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="floatingCart" class="cart-panel" style="display:none" onclick="openCartModal()">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <div id="floatingCount">0</div>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+
+    
+    // Telegram WebApp init
+    const tg = window.Telegram?.WebApp || null;
+    
+    if (tg) { try { tg.expand(); tg.setHeaderColor('#008744');
+    
+    tg.setTextColor('#FFFFFF');} catch(e){} }
+
+    // Translations
+    const translations = {
+      uz:{
+        shop:'Ecoprom', all:'Barchasi', doors:'Eshiklar', build:'Qurilish', ac:'Konditsioner', panel:'Panellar',
+        search_placeholder:'Mahsulot qidirish...',
+        favorites:'Sevimlilar', clear:'Tozalash', add_to_cart:'Savatchaga qo‘shish', to_favorites:'Sevimlilarga',
+        in_stock_label:'Omborda', your_cart:'🛒 Savatingiz', total:'Jami', checkout:'Buyurtma berish', continue_shopping:'Davom etish',
+        no_items:'Hech nima topilmadi.', cart_empty:'Savatcha bo‘sh 😅', order_success:'Buyurtmangiz qabul qilindi!', qty:'Miqdor', 
+        size: 'O‘lcham', // ✅ O'zgartirildi: Size ga O'lcham
+        color: 'Rang', // ✅ YANGI: Rang
+        color_default_value: 'Barcha ranglar mavjud', // ✅ YANGI STANDART QIYMAT
+        lock_type: 'Qulf turi' // YANGI: Qulf turi
+      },
+      ru:{
+        shop:'Ecoprom', all:'Все', doors:'Двери', build:'Стройка', ac:'Кондиционеры', panel:'Панели',
+        search_placeholder:'Поиск товаров...',
+        favorites:'Избранное', clear:'Очистить', add_to_cart:'Добавить в корзину', to_favorites:'В избранное',
+        in_stock_label:'Наличие', your_cart:'🛒 Ваша корзина', total:'Итого', checkout:'Оформить заказ', continue_shopping:'Продолжить покупки',
+        no_items:'Ничего не найдено.', cart_empty:'Корзина пуста 😅', order_success:'Ваш заказ принят!', qty:'Кол-во', 
+        size: 'Размер', // ✅ O'zgartirildi: Size ga Размер
+        color: 'Цвет', // ✅ YANGI: Цвет
+        color_default_value: 'Все цвета доступны', // ✅ YANGI STANDART QIYMAT
+        lock_type: 'Тип замка' // YANGI: Тип замка
+      },
+      en:{
+        shop:'Ecoprom', all:'All', doors:'Doors', build:'Construction', ac:'Air Conditioners', panel:'Panels',
+        search_placeholder:'Search products...',
+        favorites:'Favorites', clear:'Clear', add_to_cart:'Add to cart', to_favorites:'To favorites',
+        in_stock_label:'Stock', your_cart:'🛒 Your Cart', total:'Total', checkout:'Checkout', continue_shopping:'Continue shopping',
+        no_items:'Nothing found.', cart_empty:'Cart is empty 😅', order_success:'Your order has been accepted!', qty:'Qty', 
+        size: 'Size', // ✅ O'zgartirildi: Size ga Size
+        color: 'Color', // ✅ YANGI: Color
+        color_default_value: 'All colors available', // ✅ YANGI STANDART QIYMAT
+        lock_type: 'Lock Type' // YANGI: Lock Type
+      }
+    };
+
+    // Currency suffix per language
+    const CURRENCY = { 
+                      uz: " so‘m", 
+                      ru: " сум",      
+                      en: " UZS"   
+                    };
+
+
+    const STOCK_TEXT = { uz: {in:'Bor', out:"Yo'q"}, ru:{in:'В наличии', out:'Нет'}, en:{in:'In stock', out:'Out of stock'} };
+
+    let lang = 'uz';
+    let currentCategory = 'all';
+    let showOnlyFavs = false;
+
+    // VALYUTA KURSI UCHUN O'ZGARUVCHILAR
+    let usdSellRate = 12500; // Default kurs (masalan, 12500) API ishlamasa
+    const USD_TO_SELL_RATE_MARGIN = 1.0076; // Rasmiy CBU kursiga ustama
+
+    // Products (Narxlar USD da kiritildi)
+       const products = [
+              //ESHIKLARRRRRRRRRR
+              
+                        {id:1, name:{uz:'F Eshik',ru:'Дверь F',en:'Door F'}, price:100, category:'eshik', images:['https://i.ibb.co/pvCr94rB/1.png', 'https://i.ibb.co/wFrHKGRs/2.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, desc:{
+                          uz:`Xususiyatlar:
+                      - Material: Sandwich panellar
+                      - Ramka: Alyuminiy
+                      - Tutqich va mentešalar: Plastik
+                      - Mexanizm: Xitoy`,
+                          ru:`Характеристики:
+                      - Материал: Сэндвич панели
+                      - Рама: Алюминиевая
+                      - Ручки и петли: Пластиковые
+                      - Механизм: Китайский`,
+                          en:`Specifications:
+                      - Material: Sandwich panels
+                      - Frame: Aluminum
+                      - Handles and hinges: Plastic
+                      - Mechanism: Chinese`
+                        }, warranty:'6 oy',stock:6, sku:'DR-F',
+                        // options: [
+                              
+                        //       // ✅ YANGI QO'SHILDI: Rang opsiyasi
+                        //       { type: 'color', name: {uz: 'Rang', ru: 'Цвет', en: 'Color'}, values: [
+                        //           { value: 'Barcha ranglar mavjud', price_adjust: 0 } 
+                        //       ]}
+                        //   ]
+                        },
+
+                      {id:2, name:{uz:'F1 Eshik',ru:'Дверь F1',en:'Door F1'}, price:100, category:'eshik', images:['https://i.ibb.co/Kj9zBbDG/3.png','https://i.ibb.co/Vd4CY31/4.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, desc:{
+                        uz:`Xususiyatlar:
+                    - Material: Sandwich panellar
+                    - Ramka: Alyuminiy
+                    - Tutqich va mentešalar: Plastik
+                    - Mexanizm: Xitoy`,
+                        ru:`Характеристики:
+                    - Материал: Сэндвич панели
+                    - Рама: Алюминиевая
+                    - Ручки и петли: Пластиковые
+                    - Механизм: Китайский`,
+                        en:`Specifications:
+                    - Material: Sandwich panels
+                    - Frame: Aluminum
+                    - Handles and hinges: Plastic
+                    - Mechanism: Chinese`
+                      }, warranty:'6 oy',stock:6, sku:'DR-F1'},
+
+                      {id:3, name:{uz:'F2 Eshik',ru:'Дверь F2',en:'Door F2'}, price:100, category:'eshik', images:['https://i.ibb.co/hxh8cXFK/5.png','https://i.ibb.co/20ZdDK2M/6.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                     desc: {
+                          uz: `Xususiyatlar:
+                  - Material: Sandwich panellar
+                  - Ramka: Alyuminiyccc (F1 ga nisbatan kengaytirilgan)
+                  - Tutqich va mentešalar: Plastik (3 ta menteša)`,
+                          
+                          ru: `Характеристики:
+                  - Материал: Сэндвич панели
+                  - Рама: Алюминиевая (увеличенная по сравнению с F1)
+                  - Ручки и петли: Пластиковые (3 петли)`,
+
+                          en: `Specifications:
+                  - Material: Sandwich panels
+                  - Frame: Aluminum (extended compared to F1)
+                  - Handles and hinges: Plastic (3 hinges)`
+                      }, warranty:'6 oy',stock:6, sku:'DR-F2'},
+                    
+                      {id:4, name:{uz:'F3 Eshik',ru:'Дверь F3',en:'Door F3'}, price:100, category:'eshik', images:['https://i.ibb.co/gbdjwy33/7.png','https://i.ibb.co/rqtmgr9/8.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                      desc: {
+                            // 🇺🇿 O'zbekcha tavsif
+                            uz: `Xususiyatlar:
+                        - Material: Sandwich panellar
+                        - Ramka: Plastik
+                        - Tutqich va mentešalar: Metall
+                        - Mexanizm: Maxsus`,
+
+                            // 🇷🇺 Ruscha tavsif (Siz bergan matn)
+                            ru: `Характеристики:
+                        - Материал: Сэндвич панели
+                        - Рама: Пластиковая
+                        - Ручки и петли: Металлические
+                        - Механизм: Специальный`,
+
+                            // 🇬🇧 Inglizcha tavsif
+                            en: `Specifications:
+                        - Material: Sandwich panels
+                        - Frame: Plastic
+                        - Handles and hinges: Metal
+                        - Mechanism: Special`
+                        }, warranty:'6 oy',stock:6, sku:'DR-F3'},
+
+                        {id:5, name:{uz:'F4 Eshik',ru:'Дверь F4',en:'Door F4'}, price:100, category:'eshik', images:['https://i.ibb.co/3Y4BhGMm/9.png','https://i.ibb.co/XqyXQQ2/10.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                      desc: {
+                            // 🇺🇿 Узбекское описание
+                            uz: `Xususiyatlar:
+                        - Material: Sandwich panellar
+                        - Ramka: Plastik`,
+
+                            // 🇷🇺 Русское описание
+                            ru: `Характеристики:
+                        - Материал: Сэндвич панели
+                        - Рама: Пластиковая`,
+
+                            // 🇬🇧 Английское описание
+                            en: `Specifications:
+                        - Material: Sandwich panels
+                        - Frame: Plastic`
+                        }, warranty:'6 oy',stock:6, sku:'DR-F4'},
+
+                        {id:6, name:{uz:'F5 Eshik',ru:'Дверь F5',en:'Door F5'}, price:100, category:'eshik', images:['https://i.ibb.co/Rp2sPZFm/11.png','https://i.ibb.co/wrR9ftK2/12.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                      desc: {
+                            // 🇺🇿 Узбекское описание
+                            uz: `Xususiyatlar:
+                        - Material: Sandwich panellar
+                        - Ramka: Plastik
+                        - Tutqich va mentešalar: Metall`,
+
+                            // 🇷🇺 Русское описание
+                            ru: `Характеристики:
+                        - Материал: Сэндвич панели
+                        - Рама: Пластиковая
+                        - Ручки и петли: Металлические`,
+
+                            // 🇬🇧 Английское описание
+                            en: `Specifications:
+                        - Material: Sandwich panels
+                        - Frame: Plastic
+                        - Handles and hinges: Metal`
+                        }, warranty:'6 oy',stock:6, sku:'DR-F5'},
+
+                        {id:7, name:{uz:'F6 Eshik',ru:'Дверь F6',en:'Door F6'}, price:100, category:'eshik', images:['https://i.ibb.co/xtdQGK83/13.png','https://i.ibb.co/FqcVx2yk/14.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                      desc: {
+        // 👇 ПОЛНОЕ ОПИСАНИЕ НА ТРЕХ ЯЗЫКАХ:
+                                uz: `Xususiyatlar:
+                        - Material: Sandwich panellar
+                        - Ramka: Alyuminiy
+                        - Mentešalar: Turkiya plastigi
+                        - Tutqich: Egri to‘siqcha
+                        - Konstruktsiya: Ikki qanotli mayatnik eshik
+                        - Xususiyatlar: Shisha oynachalar
+                        - Ochildi yo‘nalishi: Ikkala tomonga`,
+
+                                ru: `Характеристики:
+                        - Материал: Сэндвич панели
+                        - Рама: Алюминиевая
+                        - Петли: Турецкие пластиковые
+                        - Ручка: Изогнутый отбойник
+                        - Конструкция: Двухстворчатая маятниковая дверь
+                        - Особенности: Стеклянные иллюминаторы
+                        - Направление открытия: В обе стороны`,
+
+                                en: `Specifications:
+                        - Material: Sandwich panels
+                        - Frame: Aluminum
+                        - Hinges: Turkish plastic
+                        - Handle: Curved bumper
+                        - Design: Double-leaf swing door
+                        - Features: Glass windows
+                        - Opening direction: Both sides`
+                            }, warranty:'6 oy',stock:6, sku:'DR-F6'},
+
+                           {id:8, name:{uz:'F7 Eshik',ru:'Дверь F7',en:'Door F7'}, price:100, category:'eshik', images:['https://i.ibb.co/v46fBbnB/15.png','https://i.ibb.co/DffTrMCW/16.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                      desc: {
+        // 👇 ПОЛНОЕ ОПИСАНИЕ НА ТРЕХ ЯЗЫКАХ:
+                            uz: `Xususiyatlar:
+                    - Material: Sandwich panellar
+                    - Ramka: Alyuminiy
+                    - Mentešalar: Turkiya plastigi
+                    - Tutqich: PVX egri to‘siqcha
+                    - Konstruktsiya: Bir qanotli mayatnik eshik`,
+
+                            ru: `Характеристики:
+                    - Материал: Сэндвич панели
+                    - Рама: Алюминиевая
+                    - Петли: Турецкие пластиковые
+                    - Ручка: Изогнутый отбойник из ПВХ
+                    - Конструкция: Одностворчатая маятниковая дверь`,
+
+                            en: `Specifications:
+                    - Material: Sandwich panels
+                    - Frame: Aluminum
+                    - Hinges: Turkish plastic
+                    - Handle: PVC curved bumper
+                    - Design: Single-leaf swing door`
+                        }, warranty:'6 oy',stock:6, sku:'DR-F7'},
+
+                        {id:9, name:{uz:'F8 Eshik',ru:'Дверь F8',en:'Door F8'}, price:100, category:'eshik', images:['https://i.ibb.co/6cBwbLss/17.png','https://i.ibb.co/Z1hd3L4Z/18.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                     desc: {
+        // 👇 ПОЛНОЕ ОПИСАНИЕ НА ТРЕХ ЯЗЫКАХ:
+                          uz: `Xususiyatlar:
+                  - Material: Sandwich panellar
+                  - Ramka: Alyuminiy
+                  - Tutqich va mentešalar: Metall
+                  - Konstruktsiya: Süriluvchi eshik
+                  - Xususiyatlar: Maxsus rels va roliklar, tutqich va tutqich mexanizmi, pastki ramkasiz (arava va transport uchun)`,
+
+                          ru: `Характеристики:
+                  - Материал: Сэндвич панели
+                  - Рама: Алюминиевая
+                  - Ручки и петли: Металлические
+                  - Конструкция: Откатная дверь
+                  - Особенности: Специальный рельс и ролики, ручка и рычаг для открытия, отсутствие нижней рамы (для заезда тележек и транспортных средств)`,
+
+                          en: `Specifications:
+                  - Material: Sandwich panels
+                  - Frame: Aluminum
+                  - Handles and hinges: Metal
+                  - Design: Sliding door
+                  - Features: Special rail and rollers, handle and opening lever, no bottom frame (for carts and vehicles)`
+                      }, warranty:'6 oy',stock:6, sku:'DR-F8'},
+
+
+                       {id:10, name:{uz:'F9 Eshik',ru:'Дверь F9',en:'Door F9'}, price:100, category:'eshik', images:['https://i.ibb.co/SDhMZV7t/19.png','https://i.ibb.co/mVJQx07B/20.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                    desc: {
+                          // 👇 ПОЛНОЕ ОПИСАНИЕ НА ТРЕХ ЯЗЫКАХ:
+                          uz: `Xususiyatlar:
+                  - Material: Sandwich panellar
+                  - Ramka: Alyuminiy
+                  - Konstruktsiya: Süriluvchi eshik (F8 bilan o‘xshash)
+                  - Xususiyatlar: Zanjirli qulflash mexanizmi, tutqichsiz dizayn`,
+
+                          ru: `Характеристики:
+                  - Материал: Сэндвич панели
+                  - Рама: Алюминиевая
+                  - Конструкция: Откатная дверь, аналогичная F8
+                  - Особенности: Механизм замка представлен цепью, отсутствие ручки`,
+
+                          en: `Specifications:
+                  - Material: Sandwich panels
+                  - Frame: Aluminum
+                  - Design: Sliding door (similar to F8)
+                  - Features: Chain-based lock mechanism, no handle`
+                      }, warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+
+
+                      // kondentsionerrrrr
+
+                      {id:11, name: {
+                              uz: "WALK-IN Muzlatish Kamerasi",
+                              ru: "WALK-IN Морозильная Камера",
+                              en: "WALK-IN Freezer Cold Room"
+                            }, 
+                            
+                            price:100, category:'konditsioner', images:['https://i.ibb.co/LzsjFKLv/24.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                                  desc: {
+                                  uz: `Bizning sovutgich va muzlatkich kameralarimiz mahsulotingizni uzoq muddat davomida yangiligini saqlab qolish uchun ideal yechimdir. Ular tibbiyot muassasalarida dori vositalarini, gullarni, go‘shtni, baliqni, mevalarni va muzqaymoqni ishonchli saqlashni ta’minlaydi. Innovatsion yechimlarimiz yordamida mahsulotingiz har qanday sharoitda doimo yangi va sifatli bo‘lib qoladi. Bizning kameralarni tanlab, siz ishonchlilikni, energiya tejamkorligini va eng yuqori saqlash standartlarini tanlaysiz.`,
+
+                                  ru: `Наши холодильные и морозильные камеры идеально подходят для долговременного сохранения свежести вашей продукции. Они обеспечивают надежное хранение лекарств в медицинских учреждениях, цветов, мяса, рыбы, фруктов и мороженого. Благодаря нашим инновационным решениям ваша продукция всегда остается свежей и качественной независимо от условий хранения. Выбирая наши камеры, вы выбираете надежность, энергоэффективность и высочайшие стандарты хранения.`,
+
+                                  en: `Our refrigeration and freezing chambers are perfect for long-term preservation of your products' freshness. They provide reliable storage for medicines in medical institutions, flowers, meat, fish, fruits, and ice cream. With our innovative solutions, your products will always remain fresh and high-quality regardless of storage conditions. By choosing our chambers, you choose reliability, energy efficiency, and the highest storage standards.`
+                                }, warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+                      {id:12, name: {
+                                      uz: "Muzqaymoq uchun kamera",
+                                      ru: "Камера для мороженого",
+                                      en: "Ice Cream Storage Chamber"
+                                    }, price:100, category:'konditsioner', images:['https://i.ibb.co/twc1XRfc/25.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                                desc: {
+                          // 👇 ПОЛНОЕ ОПИСАdesc: {
+                                      uz: `Harorat rejimi: -20°C dan -25°C gacha — muzqaymoqni uzoq muddatli saqlash uchun ideal. Xususiyatlar: Turli xil muzqaymoqlarni tartibli joylashtirish va qulay kirish uchun maxsus panjaralar yoki javonlar bilan jihozlangan.`,
+
+                                      ru: `Температурный режим: от -20°C до -25°C — идеально для длительного хранения мороженого. Особенности: Оснащена специальными решетками или полками для удобной организации и доступа к различным видам мороженого.`,
+
+                                      en: `Temperature range: from -20°C to -25°C — ideal for long-term ice cream storage. Features: Equipped with special racks or shelves for convenient organization and easy access to various types of ice cream.`
+                                    }, warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+
+                      {id:13,   
+                                name: {
+                                    uz: "Sabzavot va mevalar uchun kamera",
+                                    ru: "Камера для овощей и фруктов",
+                                    en: "Vegetable and Fruit Storage Chamber"
+                                  }, price:100, category:'konditsioner', images:['https://i.ibb.co/xK8Hk6TM/26.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                                desc: {
+                                    uz: `Harorat rejimi: +6°C dan +10°C gacha — sabzavot va mevalarni yangiligicha saqlash uchun mo‘ljallangan. Xususiyatlar: Optimal shamollatish va sozlanadigan namlik darajasi sabzavot va mevalarning saqlanish muddatini uzaytiradi. Tashkiliy qulaylik uchun turli javonlar va savatchalar bilan jihozlangan.`,
+
+                                    ru: `Температурный режим: от +6°C до +10°C — предназначена для хранения овощей и фруктов в свежем состоянии. Особенности: Оптимальная вентиляция и регулируемая влажность продлевают срок хранения овощей и фруктов. Оснащена различными полками и корзинами для удобной организации.`,
+
+                                    en: `Temperature range: from +6°C to +10°C — designed to keep vegetables and fruits fresh. Features: Optimal ventilation and adjustable humidity extend the shelf life of produce. Equipped with various shelves and baskets for convenient organization.`
+                                  }, warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+                    
+                     {id:14, 
+                              name: {
+                                      uz: "Mol go‘shti uchun kamera",
+                                      ru: "Камера для говядины",
+                                      en: "Beef Storage Chamber"
+                                    }, price:100, category:'konditsioner', images:['https://i.ibb.co/cKxQGBF7/27.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                                desc: {
+                                        uz: `Harorat rejimi: +1°C dan +4°C gacha — yangi mol go‘shtini optimal saqlash uchun mo‘ljallangan. Xususiyatlar: Mol go‘shtining turli qismlarini alohida saqlash uchun zonalarga bo‘lingan bo‘lib, bu har bir qism uchun eng qulay saqlash sharoitini ta’minlaydi.`,
+
+                                        ru: `Температурный режим: от +1°C до +4°C — предназначена для оптимального хранения свежей говядины. Особенности: Разделена на зоны для различных частей мяса, что обеспечивает поддержание оптимальных условий хранения для каждой из них.`,
+
+                                        en: `Temperature range: from +1°C to +4°C — designed for optimal storage of fresh beef. Features: Divided into zones for different beef cuts, ensuring ideal storage conditions for each section.`
+                                      }, warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+
+                       {id:15, 
+                                    name: {
+                                            uz: "Baliq uchun kamera",
+                                            ru: "Камера для рыбы",
+                                            en: "Fish Storage Chamber"
+                                          }, price:100, category:'konditsioner',
+                                          images:['https://i.ibb.co/MDvBt4Zq/28.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                                     desc: {
+                                        uz: `Harorat rejimi: -2°C dan +2°C gacha — baliqning yangiligini saqlash uchun mo‘ljallangan. Xususiyatlar: Namlikni saqlab turish uchun suv oqizish imkoniyatiga ega maxsus javonlar yoki laganlar bilan jihozlangan.`,
+
+                                        ru: `Температурный режим: от -2°C до +2°C — предназначена для сохранения свежести рыбы. Особенности: Оснащена специальными полками или лотками с возможностью слива воды для поддержания оптимальной влажности.`,
+
+                                        en: `Temperature range: from -2°C to +2°C — designed to preserve fish freshness. Features: Equipped with special shelves or trays with water drainage capability to maintain proper humidity levels.`
+                                      }, warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+
+                    {id:16, 
+                          name: {
+                                  uz: "Dori vositalari uchun kamera",
+                                  ru: "Камера для медикаментов",
+                                  en: "Medical Storage Chamber"
+                                }, price:100, category:'konditsioner',
+                                images:['https://i.ibb.co/Mxb7XYpz/29.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                            desc: {
+                                  uz: `Harorat rejimi: +2°C dan +8°C gacha — dori vositalarini xavfsiz saqlash uchun mo‘ljallangan. Xususiyatlar: Dori vositalarining xavfsizligini ta’minlash uchun haroratni kuzatish tizimi va favqulodda ogohlantirish funksiyasi bilan jihozlangan.`,
+
+                                  ru: `Температурный режим: от +2°C до +8°C — предназначена для безопасного хранения медикаментов. Особенности: Оснащена системой мониторинга температуры с аварийным оповещением для обеспечения безопасности лекарственных средств.`,
+
+                                  en: `Temperature range: from +2°C to +8°C — designed for safe storage of medicines. Features: Equipped with a temperature monitoring system and emergency alert function to ensure the safety of pharmaceuticals.`
+                                },warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+
+                      {id:17, name:{uz:'konditsioner',ru:'konditsioner9',en:'konditsioner'}, price:100, category:'konditsioner', images:['https://i.ibb.co/SY53hFB/30.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                    desc: {
+                          // 👇 ПОЛНОЕ ОПИСАНИЕ НА ТРЕХ ЯЗЫКАХ:
+                          uz: `Xususiyatlar:
+                  - Material: Sandwich panellar
+                  - Ramka: Alyuminiy
+                  - Konstruktsiya: Süriluvchi eshik (F8 bilan o‘xshash)
+                  - Xususiyatlar: Zanjirli qulflash mexanizmi, tutqichsiz dizayn`,
+
+                          ru: `Характеристики:
+                  - Материал: Сэндвич панели
+                  - Рама: Алюминиевая
+                  - Конструкция: Откатная дверь, аналогичная F8
+                  - Особенности: Механизм замка представлен цепью, отсутствие ручки`,
+
+                          en: `Specifications:
+                  - Material: Sandwich panels
+                  - Frame: Aluminum
+                  - Design: Sliding door (similar to F8)
+                  - Features: Chain-based lock mechanism, no handle`
+                      }, warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+
+
+                    {id:18, name:{uz:'konditsioner',ru:'konditsioner9',en:'konditsioner'}, price:100, category:'konditsioner', images:['https://i.ibb.co/ynbFCf2q/31.png'], short:{uz:'Material: Sandwich panel',ru:'Материал: Сэндвич панели',en:'Material: Sandwich panel'}, 
+                    desc: {
+                          // 👇 ПОЛНОЕ ОПИСАНИЕ НА ТРЕХ ЯЗЫКАХ:
+                          uz: `Xususiyatlar:
+                  - Material: Sandwich panellar
+                  - Ramka: Alyuminiy
+                  - Konstruktsiya: Süriluvchi eshik (F8 bilan o‘xshash)
+                  - Xususiyatlar: Zanjirli qulflash mexanizmi, tutqichsiz dizayn`,
+
+                          ru: `Характеристики:
+                  - Материал: Сэндвич панели
+                  - Рама: Алюминиевая
+                  - Конструкция: Откатная дверь, аналогичная F8
+                  - Особенности: Механизм замка представлен цепью, отсутствие ручки`,
+
+                          en: `Specifications:
+                  - Material: Sandwich panels
+                  - Frame: Aluminum
+                  - Design: Sliding door (similar to F8)
+                  - Features: Chain-based lock mechanism, no handle`
+                      }, warranty:'6 oy',stock:6, sku:'DR-F9'},
+
+                               
+
+                                        
+
+
+  // PANELLLL
+  {id:22, name:{uz:'Yashirin Zamokli PIR Panel',ru:'Дверь F18',en:'Door F18'}, price:27, category:'panel', images:['https://i.ibb.co/NdFPCV5Y/23.png'], short:{uz:'Zamonaviy dizayn',ru:'Современный дизайн',en:'Modern design'}, desc:{uz:'Sandwich panel · Ramka: Alyuminiy',ru:'Сэндвич панель · Алюминиевая рама',en:'Sandwich panel · Aluminum frame'}, warranty:'6 oy',stock:3, sku:'DR-F18',
+  // ✅ O'ZGARISH: Razmer opsiyalarini qo'shish
+    options: [
+        { type: 'size', name: {uz: 'O‘lcham', ru: 'Размер', en: 'Size'}, values: [
+            // ... (mavjud o'lchamlar)
+            { value: '5cm', price_adjust: 0 },
+            { value: '8cm', price_adjust: 2 }, 
+            
+        ]},
+        // ✅ YANGI QO'SHILDI: Rang opsiyasi
+        { type: 'color', name: {uz: 'Rang', ru: 'Цвет', en: 'Color'}, values: [
+            { value: 'Barcha ranglar mavjud', price_adjust: 0 } 
+        ]}
+    ]
+},
+
+  {id:23, name:{uz:'PUR Panel',ru:'Дверь F19',en:'Door F19'}, price:27, category:'panel', images:['https://i.ibb.co/B51h8gCm/22.png'], short:{uz:'Soddaligi va chidamliligi bilan ajraladi',ru:'Простая и прочная',en:'Simple and durable'}, desc:{uz:'Ramka: Alyuminiy · Mexanizm: Xitoy',ru:'Алюминиевая рама · Китайский механизм',en:'Aluminum frame · Chinese mechanism'}, warranty:'6 oy',stock:3, sku:'DR-F19',
+  options: [
+        // 1. O'lcham opsiyasi (Size)
+        { type: 'size', name: {uz: 'O‘lcham', ru: 'Размер', en: 'Size'}, values: [
+            // ... (mavjud o'lchamlar)
+            { value: '5cm', price_adjust: 0 },
+            { value: '8cm', price_adjust: 2 }, 
+            { value: '10cm', price_adjust: 35 }, 
+            { value: '15cm', price_adjust: 43 },
+        ]},
+        // ✅ 2. Qulf turi opsiyasi (Lock Type)
+        { type: 'lock_type', name: {uz: 'Qulf turi', ru: 'Тип замка', en: 'Lock Type'}, values: [
+            { value: 'Zamokli', price_adjust: 0 },
+            { value: 'Zamoksiz', price_adjust: 15 } // Zamoq qo'shilishi uchun +$15
+        ]},
+        // ✅ YANGI QO'SHILDI: Rang opsiyasi
+        { type: 'color', name: {uz: 'Rang', ru: 'Цвет', en: 'Color'}, values: [
+            { value: 'Barcha ranglar mavjud', price_adjust: 0 } 
+        ]}
+    ]
+
+}, 
+
+  {id:24, name:{uz:'Panel',ru:'Дверь F20',en:'Door F20'}, price:100, category:'panel', images:['https://i.ibb.co/1jsNDYx/21.png'], short:{uz:'Issiqlikni yaxshi saqlaydi',ru:'Хорошо сохраняет тепло',en:'Keeps heat well'}, desc:{uz:'Sandwich panel · Yengil konstruktsiya',ru:'Сэндвич панель · Лёгкая конструкция',en:'Sandwich panel · Lightweight construction'}, warranty:'6 oy',stock:3, sku:'DR-F20',
+  options: [
+    { type: 'color', name: {uz: 'Rang', ru: 'Цвет', en: 'Color'}, values: [
+            { value: 'Barcha ranglar mavjud', price_adjust: 0 } 
+        ]}
+  ]
+},
+
+  
+];
+
+
+    // localStorage keys
+    const CART_KEY = 'ecoprom_cart_v2';
+    const FAV_KEY = 'ecoprom_fav_v2';
+
+    // app state
+    // ✅ O'ZGARISH: cart obyektida endi options va price_adjust saqlanadi
+    let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); // [{id, qty, options: {}, price_adjust: 0}]
+    let favs = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');   // [id,id]
+    let activeProduct = null;
+    let modalQty = 1;
+    // ✅ YANGI O'ZGARUVCHILAR: Tanlangan variantlar va ularning narxga ta'siri
+    let selectedOptions = {}; 
+    let currentPriceAdjustment = 0; 
+    let currentSlide = 0; // ✅ SLIDER UCHUN YANGI: Aktiv slayd indexi
+    
+    // ✅ SWIPE UCHUN YANGI O'ZGARUVCHILAR
+    let touchStartX = 0;
+    const SWIPE_THRESHOLD = 50; // Minimum surish masofasi (px)
+
+    // dom refs
+    const productList = document.getElementById('productList');
+    const cartNumber = document.getElementById('cartNumber');
+    const floatingCount = document.getElementById('floatingCount');
+    const slidesDiv = document.getElementById('slides');
+    const productModal = document.getElementById('productModal');
+    const cartModal = document.getElementById('cartModal');
+    const cartListDiv = document.getElementById('cartList');
+    const cartTotalDiv = document.getElementById('cartTotal');
+    const modalName = document.getElementById('modalName');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalShort = document.getElementById('modalShort');
+    const modalSpecs = document.getElementById('modalSpecs');
+    const modalExtraDesc = document.getElementById('modalExtraDesc');
+    const modalQtySpan = document.getElementById('modalQty');
+    const modalStockSpan = document.getElementById('modalStock');
+    const langBtn = document.getElementById('langBtn');
+    const langMenu = document.getElementById('langMenu');
+    const catTrack = document.getElementById('catTrack');
+    const modalOptionsDiv = document.getElementById('modalOptions'); // ✅ YANGI DOM REF
+
+    // CBU API dan joriy valyuta kursini olish
+    async function fetchExchangeRate(){
+      const CBU_API = 'https://cbu.uz/uz/arkhiv-kursov-valyut/json/all/';
+      try {
+        const response = await fetch(CBU_API);
+        if (!response.ok) throw new Error('API dan kursni olishda xatolik');
+        
+        const data = await response.json();
+        const usdRateData = data.find(c => c.Ccy === 'USD');
+        
+        if (usdRateData && usdRateData.Rate) {
+          const officialRate = parseFloat(usdRateData.Rate);
+          
+          // Rasmiy kursni Sotish kursi (Sell Rate) ni simulyatsiya qilish uchun marja bilan yangilash
+          // Math.round ishlatiladi, chunki UZS kurslari butun son bo'lishi kerak.
+          usdSellRate = Math.round(officialRate * USD_TO_SELL_RATE_MARGIN); 
+          console.log(`Valyuta kursi yangilandi. USD/UZS (Sell): ${usdSellRate}`);
+        } else {
+          console.warn("API dan USD kursini topib bo'lmadi, default kurs ishlatiladi.");
+        }
+      } catch (error) {
+        console.error("Valyuta kursini yuklashda muammo:", error);
+      }
+    }
+
+
+    // init
+    updateTexts();
+
+    async function initApp(){
+        await fetchExchangeRate(); // Kursni yuklab olishni kutish
+
+        renderProducts();
+        updateCartCount();
+        renderFloatingCart();
+        reflectFavBtnState();
+    }
+
+    initApp(); // initApp ni chaqirish
+
+    // language toggle
+    langBtn.onclick = ()=> { langMenu.style.display = langMenu.style.display === 'block' ? 'none' : 'block'; }
+    document.addEventListener('click', e => { if(!e.target.closest('.lang-select')) langMenu.style.display = 'none'; });
+
+    function setLang(l){
+      lang = l;
+      updateTexts();
+      renderProducts();
+      if (productModal.style.display === 'flex' && activeProduct) openProductModal(activeProduct.id); // update modal texts
+      if (cartModal.style.display === 'flex') renderCartList();
+      langMenu.style.display = 'none';
+      langBtn.innerText = l==='uz' ? '🇺🇿 O‘z ▾' : l==='ru' ? '🇷🇺 Ру ▾' : '🇬🇧 En ▾';
+    }
+
+    function updateTexts(){
+      document.getElementById('shopTitle').innerText = translations[lang].shop;
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) el.innerText = translations[lang][key];
+      });
+      document.getElementById('searchInput').placeholder = translations[lang].search_placeholder;
+    }
+
+    // formatting
+    function formatPrice(usdPrice){
+      // Narxni USD da olib, uni sotish kursi (sell rate) ga ko'paytiramiz
+      const totalUzs = Math.round(usdPrice * usdSellRate);
+      
+      // So'm qiymatini bo'shliqlar bilan formatlash
+      const s = totalUzs.toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+      return s + CURRENCY[lang];
+    }
+
+    function getById(id){ return products.find(p => p.id === id) }
+
+    // Render products grid
+    function renderProducts(){
+      const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      
+      // Yangi filtr: Faqat omborda bor mahsulotlar ko'rsatiladi (p.stock > 0)
+      let filtered = products.filter(p => 
+        (p.stock > 0) &&
+        (currentCategory === 'all' || p.category === currentCategory)
+      ); 
+
+      if (q) filtered = filtered.filter(p => (p.name[lang]||p.name.uz).toLowerCase().includes(q) || (p.short[lang]||'').toLowerCase().includes(q) || (p.desc[lang]||'').toLowerCase().includes(q));
+      
+      // Eslatma: Sevimlilar ro'yxati (showOnlyFavs) filtrlangandan so'ng amalga oshiriladi
+      if (showOnlyFavs) filtered = filtered.filter(p => favs.includes(p.id));
+
+      productList.innerHTML = '';
+      if (filtered.length === 0){
+        productList.innerHTML = `<div class="empty-state">${translations[lang].no_items}</div>`;
+        return;
+      }
+
+      filtered.forEach(p=>{
+        // Kartochkadagi narx doimo bazaviy narxni ko'rsatadi
+        const basePrice = p.price + (p.options?.[0]?.values?.[0]?.price_adjust || 0); // Agar opts bo'lsa, eng arzonini hisobga olish
+        
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="media" onclick="openProductModal(${p.id})">
+            <img src="${p.images[0]}" alt="${escapeHtml(p.name[lang]||p.name.uz)}" loading="lazy">
+          </div>
+          <div class="price-row">
+            <h4>${escapeHtml(p.name[lang]||p.name.uz)}</h4>
+          </div>
+          <div class="muted">${escapeHtml(p.short[lang]||p.short.uz||'')}</div>
+          <div class="price-row">
+            <div class="price">${formatPrice(basePrice)}</div>
+            
+            <div class="actions">
+              <button class="btn" onclick="openProductModal(${p.id})">+</button>
+            </div>
+
+          </div>
+          <div class="fav ${favs.includes(p.id)?'active':''}" onclick="toggleFav(event,${p.id})"><i class="${favs.includes(p.id)?'fa-solid':'fa-regular'} fa-heart"></i></div>
+        `;
+        productList.appendChild(card);
+      });
+    }
+
+    // helpers
+    function escapeHtml(s){ return (s||'').toString().replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') }
+
+    document.getElementById('searchInput').addEventListener('input', ()=>{
+      showOnlyFavs = false;
+      document.getElementById('favViewBtn').classList.remove('active');
+      renderProducts();
+    });
+
+    function filterCategory(cat, e){
+      currentCategory = cat;
+      showOnlyFavs = false;
+      document.getElementById('favViewBtn').classList.remove('active');
+      document.querySelectorAll('.categories button').forEach(b=>b.classList.remove('active'));
+      if (e && e.currentTarget) e.currentTarget.classList.add('active');
+      renderProducts();
+    }
+
+    function clearFilters(){
+      document.getElementById('searchInput').value = '';
+      currentCategory = 'all';
+      showOnlyFavs = false;
+      document.querySelectorAll('.categories button').forEach(b=>b.classList.remove('active'));
+      document.querySelector('.categories button[data-cat="all"]')?.classList.add('active');
+      renderProducts();
+    }
+
+    // favorites
+    function toggleFav(e, id){
+      e.stopPropagation();
+      const idx = favs.indexOf(id);
+      if (idx===-1) favs.push(id); else favs.splice(idx,1);
+      localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+      renderProducts();
+      reflectFavBtnState();
+    }
+
+    function viewFavorites(){
+      showOnlyFavs = !showOnlyFavs;
+      if (showOnlyFavs){
+        currentCategory = 'all';
+        document.querySelectorAll('.categories button').forEach(b=>b.classList.remove('active'));
+        document.querySelector('.categories button[data-cat="all"]')?.classList.add('active');
+      }
+      reflectFavBtnState();
+      renderProducts();
+    }
+
+    function reflectFavBtnState(){
+      const btn = document.getElementById('favViewBtn');
+      if (showOnlyFavs) btn.classList.add('active'); else btn.classList.remove('active');
+      // hide if no favs
+      if (favs.length === 0) btn.style.display = 'none'; else btn.style.display = 'inline-flex';
+    }
+    
+    // ✅ YANGI FUNKSIYA: Mahsulot modalidagi jami narxni hisoblash va yangilash
+    function updateModalTotal(){
+        if (!activeProduct) return;
+        
+        // Narxga bazaviy narx + tanlangan variant bo'yicha narx o'zgarishini qo'shish
+        const basePrice = activeProduct.price + currentPriceAdjustment; 
+        
+        // Narxni USD da olib, uni tanlangan miqdorga ko'paytirish
+        const totalUsd = basePrice * modalQty;
+        
+        // Formatlab, modalga joylash
+        modalPrice.innerText = formatPrice(totalUsd);
+    }
+    
+    // ✅ YANGI FUNKSIYA: Variantni tanlash (masalan, razmer/lock_type)
+    window.selectOption = function(type, value, priceAdjust){
+        selectedOptions[type] = value;
+        
+        // Jami narx o'zgarishini qayta hisoblash
+        currentPriceAdjustment = 0;
+        activeProduct.options.forEach(option => {
+            if (selectedOptions[option.type]) {
+                const selectedValue = option.values.find(v => v.value === selectedOptions[option.type]);
+                if (selectedValue) {
+                    currentPriceAdjustment += (selectedValue.price_adjust || 0);
+                }
+            }
+        });
+        
+        updateModalTotal(); 
+    }
+    
+    // ------------------------------------------------------------------
+    // ✅ SLIDER FUNKSIYALARI START (Swipe qo'shildi)
+    // ------------------------------------------------------------------
+    function initSlider(images){
+      currentSlide = 0; // Har doim 0-slayddan boshlaymiz
+      slidesDiv.innerHTML = ''; // Tozalash
+      
+      const slideWrapper = document.createElement('div');
+      slideWrapper.className = 'slide-wrapper';
+      slideWrapper.id = 'slideWrapper';
+      
+      // Har bir rasm uchun slayd elementini yaratish
+      images.forEach(src => {
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        slide.innerHTML = `<img src="${src}" alt="Product image" loading="lazy">`;
+        slideWrapper.appendChild(slide);
+      });
+      slidesDiv.appendChild(slideWrapper);
+      
+      // Slayd boshqaruv elementlarini qo'shish (faqat 1+ slayd bo'lsa)
+      if (images.length > 1) {
+        slidesDiv.innerHTML += `
+          <div class="slide-controls">
+            <button class="slide-control-btn" id="prevSlideBtn" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="slide-control-btn" id="nextSlideBtn" onclick="changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="slide-indicators" id="slideIndicators"></div>
+        `;
+
+        // ✅ SWIPE LISTENERLARINI BIRIKTIRISH
+        slidesDiv.addEventListener('touchstart', handleTouchStart, false);
+        slidesDiv.addEventListener('touchmove', handleTouchMove, false);
+        slidesDiv.addEventListener('touchend', handleTouchEnd, false);
+      } else {
+        // Agar 1 ta rasm bo'lsa, listenerlarni olib tashlash (agar oldin bo'lgan bo'lsa)
+        slidesDiv.removeEventListener('touchstart', handleTouchStart, false);
+        slidesDiv.removeEventListener('touchmove', handleTouchMove, false);
+        slidesDiv.removeEventListener('touchend', handleTouchEnd, false);
+      }
+      
+      // Boshqaruv elementlarini joylashtirish
+      updateSlideControls(images.length);
+    }
+
+    window.changeSlide = function(delta){
+      const wrapper = document.getElementById('slideWrapper');
+      const totalSlides = activeProduct.images.length;
+      
+      let newSlide = currentSlide + delta;
+      if (newSlide < 0) newSlide = totalSlides - 1; // Loop to last
+      if (newSlide >= totalSlides) newSlide = 0; // Loop to first
+      
+      currentSlide = newSlide;
+      
+      // CSS Transform yordamida slaydni almashtirish
+      wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      updateSlideControls(totalSlides);
+    }
+    
+    function updateSlideControls(totalSlides){
+      const indicatorsDiv = document.getElementById('slideIndicators');
+      
+      if (totalSlides > 1) {
+        // Indicatorlarni yangilash
+        indicatorsDiv.innerHTML = '';
+        for(let i=0; i<totalSlides; i++) {
+          const indicator = document.createElement('span');
+          indicator.className = `slide-indicator${i === currentSlide ? ' active' : ''}`;
+          indicator.onclick = () => {
+            currentSlide = i;
+            document.getElementById('slideWrapper').style.transform = `translateX(-${currentSlide * 100}%)`;
+            updateSlideControls(totalSlides);
+          };
+          indicatorsDiv.appendChild(indicator);
+        }
+      }
+    }
+    
+    // --- SWIPE LOGIC START ---
+    function handleTouchStart(e) {
+        // Faqat bitta barmoq bilan ishlashni nazorat qilish
+        if (e.touches.length === 1) {
+            touchStartX = e.touches[0].clientX;
+        }
+    }
+
+    function handleTouchMove(e) {
+        // Surish paytida standart hodisalarni (scrollni) o'chirib qo'yish
+        // e.preventDefault();
+        // Lekin e.preventDefault() butun sahifani surishni bloklashi mumkin.
+        // Shuning uchun bu yerda qoldirilmaydi, chunki biz faqat gorizontal surishni qabul qilamiz
+    }
+
+    function handleTouchEnd(e) {
+        // Agar biron-bir barmoq qolmagan bo'lsa va touchStartX o'rnatilgan bo'lsa
+        if (e.changedTouches.length === 0 || touchStartX === 0) return;
+
+        const touchEndX = e.changedTouches[0].clientX;
+        const diffX = touchStartX - touchEndX; // Musbat qiymat - chapga surish (next slide)
+
+        if (Math.abs(diffX) > SWIPE_THRESHOLD) {
+            if (diffX > 0) {
+                // Chapga surish (Swipe Left) -> Keyingi slayd
+                changeSlide(1); 
+            } else {
+                // O'ngga surish (Swipe Right) -> Oldingi slayd
+                changeSlide(-1);
+            }
+        }
+        
+        // Keyingi surish uchun o'zgaruvchini tozalash
+        touchStartX = 0;
+    }
+    // --- SWIPE LOGIC END ---
+    
+    // ------------------------------------------------------------------
+    // ✅ SLIDER FUNKSIYALARI END
+    // ------------------------------------------------------------------
+
+
+    // product modal
+    window.openProductModal = function(id){
+      activeProduct = getById(id);
+      if (!activeProduct) return;
+      modalQty = 1;
+      selectedOptions = {}; // ✅ HAR SAFAR YANGILASH
+      currentPriceAdjustment = 0; // ✅ HAR SAFAR YANGILASH
+      
+      // ✅ O'ZGARISH: Slayderni ishga tushirish
+      initSlider(activeProduct.images);
+      
+      modalName.innerText = activeProduct.name[lang] || activeProduct.name.uz;
+      
+      // ✅ O'ZGARISH: Narxni yangilash funksiyasi birinchi marta chaqirilmoqda
+      updateModalTotal(); 
+      
+      modalShort.innerText = activeProduct.short[lang] || activeProduct.short.uz || '';
+      modalExtraDesc.innerText = activeProduct.desc[lang] || activeProduct.desc.uz || '';
+      modalQtySpan.innerText = modalQty;
+      // Omborda borligini tekshirish (chunki filtr qilingan bo'lishi mumkin)
+      modalStockSpan.innerText = activeProduct.stock > 0 ? STOCK_TEXT[lang].in : STOCK_TEXT[lang].out;
+      
+      // ✅ O'ZGARISH: Opsiyalar/Razmerlarni ko'rsatish
+      modalOptionsDiv.innerHTML = ''; // Oldingi elementlarni tozalash
+      if (activeProduct.options && activeProduct.options.length > 0) {
+        let optionsHtml = '';
+        activeProduct.options.forEach(option => {
+            const optName = translations[lang][option.type] || option.name[lang] || option.name.uz;
+            
+            // ✅ RANG (COLOR) UCHUN MAXSUS HTML QISM
+            if (option.type === 'color') {
+                const colorValue = option.values?.[0]?.value || translations[lang].color_default_value;
+                selectedOptions[option.type] = colorValue; 
+                optionsHtml += `
+                    <div style="margin-bottom:12px">
+                        <div style="font-weight:700;margin-bottom:6px">${optName}</div>
+                        <p style="margin:0;font-weight: 600; color: #333;">${escapeHtml(colorValue)}</p>
+                    </div>
+                `;
+            } else {
+                // Boshqa variantlar (SIZE, LOCK_TYPE) uchun Radio/Tanlash qismi
+                let valuesHtml = '';
+                
+                option.values.forEach((val, index) => {
+                    // Birinchi variantni default qilib belgilash
+                    if(index === 0) {
+                        selectedOptions[option.type] = val.value; 
+                    }
+                    
+                    // Price adjust ko'rsatish 
+                    const adjustValue = val.price_adjust || 0;
+                    let adjustText = '';
+                    if (adjustValue > 0) adjustText = ` (+${formatPrice(adjustValue)})`;
+                    else if (adjustValue < 0) adjustText = ` (${formatPrice(adjustValue)})`;
+                    
+                    // Radio tugmasi sifatida render qilish
+                    valuesHtml += `
+                        <label style="display:inline-flex;align-items:center;margin-right:12px;cursor:pointer;margin-top:4px">
+                            <input type="radio" name="${option.type}" value="${val.value}" data-price-adjust="${adjustValue}" 
+                                ${index === 0 ? 'checked' : ''} 
+                                onchange="selectOption('${option.type}', this.value, parseFloat(this.getAttribute('data-price-adjust')))">
+                            <span style="margin-left:4px;font-size:14px">${val.value}${adjustText}</span>
+                        </label>
+                    `;
+                });
+                optionsHtml += `
+                    <div style="margin-bottom:12px">
+                        <div style="font-weight:700;margin-bottom:6px">${optName}</div>
+                        <div style="display:flex;flex-wrap:wrap">${valuesHtml}</div>
+                    </div>
+                `;
+            }
+        });
+        modalOptionsDiv.innerHTML = optionsHtml;
+        
+        // Boshlang'ich narxni hisoblash uchun barcha default tanlangan optionlarning narx ta'sirini jamlash
+        currentPriceAdjustment = 0;
+        activeProduct.options.forEach(option => {
+            const defaultValue = selectedOptions[option.type];
+            if (defaultValue) {
+                const selectedValue = option.values.find(v => v.value === defaultValue);
+                if (selectedValue) {
+                    currentPriceAdjustment += (selectedValue.price_adjust || 0);
+                }
+            }
+        });
+        
+        updateModalTotal(); // Variantlar tanlanganidan keyin umumiy narxni yana bir bor yangilash
+      }
+      
+      // SPECS (Optimized: uses activeProduct.specs)
+      modalSpecs.innerHTML = '';
+      if (activeProduct.specs && activeProduct.specs.length > 0) {
+        activeProduct.specs.forEach(spec => {
+          const label = spec.label[lang] || spec.label.uz;
+          const value = typeof spec.value === 'object' ? (spec.value[lang] || spec.value.uz) : spec.value;
+          modalSpecs.innerHTML += `<div class="spec"><div>${escapeHtml(label)}</div><div>${escapeHtml(value)}</div></div>`;
+        });
+      } else {
+        // Fallback for older products or empty specs
+        modalSpecs.innerHTML = ''; 
+      }
+
+      // fav btn
+      const favBtn = document.getElementById('modalFavBtn');
+      favBtn.querySelector('i').className = favs.includes(activeProduct.id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+
+      // Stock check for Add to Cart button
+      document.getElementById('modalAddBtn').disabled = activeProduct.stock <= 0;
+
+      productModal.style.display = 'flex';
+      productModal.setAttribute('aria-hidden','false');
+      // hide Telegram MainButton to avoid overlap
+      if (tg && tg.MainButton) try{ tg.MainButton.hide(); }catch(e){}
+    };
+
+    function closeModal(){
+      productModal.style.display = 'none';
+      productModal.setAttribute('aria-hidden','true');
+      activeProduct = null;
+    }
+
+    function updateModalQty(delta){
+      modalQty = Math.max(1, modalQty + delta);
+      modalQtySpan.innerText = modalQty;
+      // ✅ O'ZGARISH: Miqdor o'zgarganda umumiy narxni yangilash
+      updateModalTotal(); 
+    }
+
+    // Correctly defined modalToggleFav function
+    window.modalToggleFav = function(){
+      if (!activeProduct) return;
+      const id = activeProduct.id;
+      const idx = favs.indexOf(id);
+      if (idx===-1) favs.push(id); else favs.splice(idx,1);
+      localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+      
+      // Update icon in modal
+      document.getElementById('modalFavBtn').querySelector('i').className = favs.includes(id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+      
+      // Update icon in grid (if visible)
+      renderProducts();
+      reflectFavBtnState();
+    }
+
+    // cart: add/remove/show
+    function addToCart(productId, qty=1, options={}, priceAdjust=0){ // ✅ O'ZGARISH: options va priceAdjust qabul qiladi
+      
+      let item = null;
+      // Mahsulotni topish uchun ID va tanlangan Options (Razmer) bir xil bo'lishi kerak
+      if (Object.keys(options).length > 0) {
+          // Razmer/Color/Lock_Type tanlangan bo'lsa, ID va Options tengligini tekshirish
+          item = cart.find(it => 
+            it.id === productId && 
+            JSON.stringify(it.options) === JSON.stringify(options)
+          );
+      } else {
+          // Razmer/Options bo'lmasa, faqat ID tengligini tekshirish
+          item = cart.find(it => it.id === productId && !it.options);
+      }
+
+      if (item) item.qty += qty; 
+      // ✅ O'ZGARISH: Savatga price_adjust ni saqlash
+      else cart.push({id: productId, qty, options, price_adjust: priceAdjust}); 
+
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      updateCartCount();
+      showTinyNotif(translations[lang].add_to_cart + ' ✓');
+      renderFloatingCart();
+    }
+
+    function modalAddToCart(){
+      if (!activeProduct || activeProduct.stock <= 0) return;
+      // ✅ O'ZGARISH: Tanlangan options va currentPriceAdjustment ni yuborish
+      addToCart(activeProduct.id, modalQty, selectedOptions, currentPriceAdjustment); 
+      closeModal();
+    }
+
+    function updateCartCount(){
+      const total = cart.reduce((s,i)=>s+i.qty,0);
+      cartNumber.innerText = total;
+      floatingCount.innerText = total;
+    }
+
+    function renderFloatingCart(){
+      const el = document.getElementById('floatingCart');
+      if (cart.length>0) el.style.display = 'flex'; else el.style.display = 'none';
+    }
+
+    function renderCartList(){
+      cartListDiv.innerHTML = '';
+      
+      // XATOLIKNI TUZATISH: products ro'yxatidan o'chirilgan mahsulotlarni ko'rsatishdan oldin chiqarib tashlash
+      cart = cart.filter(it => getById(it.id)); 
+      localStorage.setItem(CART_KEY, JSON.stringify(cart)); 
+      
+      if (cart.length === 0){
+        cartListDiv.innerHTML = `<div class="empty-state">${translations[lang].cart_empty}</div>`;
+        cartTotalDiv.innerText = formatPrice(0);
+        document.getElementById('checkoutBtn').disabled = true;
+        return;
+      }
+      document.getElementById('checkoutBtn').disabled = false;
+      let total = 0;
+      cart.forEach(item=>{
+        const p = getById(item.id);
+        if (!p) return; // Himoya uchun (yuqorida tozalangan bo'lishi kerak)
+        
+        // ✅ O'ZGARISH: Narxni price_adjust bilan hisoblash
+        const priceAdjust = item.price_adjust || 0;
+        const basePrice = p.price + priceAdjust;
+        const subtotal = basePrice * item.qty; // basePrice (USD)
+        total += subtotal;
+        
+        // ✅ O'ZGARISH: Options (razmer/color/lock_type) matnini ko'rsatish
+        let optionsText = '';
+        if (item.options && Object.keys(item.options).length > 0) {
+            // Obyekt kalitlari bo'ylab aylanib chiqish (size, color, lock_type)
+            Object.keys(item.options).forEach(key => {
+                const label = translations[lang][key] || key.charAt(0).toUpperCase() + key.slice(1);
+                const value = item.options[key];
+                
+                // Color opsiyasi uchun maxsus holat
+                if (key === 'color' && value === translations[lang].color_default_value) {
+                    // Agar standart qiymat bo'lsa, uni ko'rsatmaymiz (yoki sodda ko'rsatamiz)
+                    optionsText += `<div class="muted" style="font-size:12px;margin-top:2px;opacity:0.8">${escapeHtml(value)}</div>`;
+                } else {
+                    optionsText += `<div class="muted" style="font-size:12px;margin-top:2px">${label}: ${escapeHtml(value)}</div>`;
+                }
+            });
+        }
+        
+
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <div class="cart-media"><img src="${p.images[0]}" alt="${escapeHtml(p.name[lang]||p.name.uz)}"></div>
+          <div class="cart-info">
+            <div>${escapeHtml(p.name[lang]||p.name.uz)}</div>
+            ${optionsText} 
+            <div class="muted">${formatPrice(basePrice)} × ${item.qty}</div>
+          </div>
+          <div style="font-weight:800">${formatPrice(subtotal)}</div>
+          <button class="btn ghost" title="Remove" onclick="removeFromCart(${p.id})"><i class="fa-solid fa-xmark"></i></button>
+        `;
+        cartListDiv.appendChild(div);
+      });
+      cartTotalDiv.innerText = formatPrice(total);
+    }
+
+    function removeFromCart(id){
+      // Razmer qo'shilganidan keyin faqat ID bo'yicha o'chirish biroz murakkab,
+      // chunki bir xil ID li har xil razmerli mahsulotlar bo'lishi mumkin.
+      // Hozircha faqat ID bo'yicha o'chiramiz.
+      cart = cart.filter(it=>it.id !== id);
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      updateCartCount();
+      renderFloatingCart();
+      renderCartList();
+    }
+
+    function openCartModal(){
+      renderCartList();
+      cartModal.style.display = 'flex';
+      cartModal.setAttribute('aria-hidden','false');
+      if (tg && tg.MainButton) try{ tg.MainButton.hide(); }catch(e){}
+    }
+
+    function closeCartModal(){
+      cartModal.style.display = 'none';
+      cartModal.setAttribute('aria-hidden','true');
+    }
+
+    function continueShopping(){ closeCartModal(); }
+
+    function checkout(){
+      if (cart.length === 0){
+        alert(translations[lang].cart_empty);
+        return;
+      }
+      
+      // ✅ TUZATISH 1: products ro'yxatidan o'chirilgan mahsulotlarni savatchadan chiqarib tashlash
+      const initialCartLength = cart.length;
+      cart = cart.filter(it => getById(it.id)); 
+      localStorage.setItem(CART_KEY, JSON.stringify(cart)); 
+      
+      if (cart.length === 0){
+        updateCartCount(); renderFloatingCart(); renderCartList();
+        alert(translations[lang].cart_empty);
+        return;
+      }
+      
+      // Agar mahsulotlar olib tashlangan bo'lsa, savatchani yangilash
+      if (cart.length < initialCartLength) {
+          updateCartCount(); 
+          renderFloatingCart(); 
+          renderCartList();
+      }
+
+      // ✅ O'ZGARISH: Order obyekti ichida har bir mahsulotni bitta obyektda saqlab olish
+      const orderItems = cart.map(it=>{
+          const p = getById(it.id); 
+          // O'zgaruvchan narxni hisoblash
+          const priceAdjust = it.price_adjust || 0;
+          const basePriceUsd = p.price + priceAdjust;
+
+          // Options matnini yig'ish (botga yuborish uchun)
+          let optionStr = '';
+          if (it.options && Object.keys(it.options).length > 0) {
+            optionStr = Object.keys(it.options).map(key => {
+                const label = translations[lang][key] || key.charAt(0).toUpperCase() + key.slice(1);
+                return `${label}: ${it.options[key]}`;
+            }).join(', ');
+            optionStr = ` (${optionStr})`;
+          }
+
+          // p albatta mavjud
+          return {
+              id: it.id, 
+              name: p.name[lang]||p.name.uz, 
+              options: it.options, // Tanlangan variant (masalan, razmer)
+              option_str: optionStr, // Bot uchun qulay matn
+              qty: it.qty, 
+              price_usd: basePriceUsd, 
+              price_uzs: Math.round(basePriceUsd * usdSellRate)
+          };
+      });
+
+      const order = {
+        items: orderItems, 
+        total_usd: orderItems.reduce((s,i)=> s + (i.price_usd * i.qty), 0),
+        total_uzs: orderItems.reduce((s,i)=> s + (i.price_uzs * i.qty), 0),
+        ts: new Date().toISOString()
+      };
+      
+      // Sending data to Telegram (for bot processing)
+      // Xabar matnini yanada soddalashtirish va mustahkamlash
+      const orderText = order.items.map(i => {
+          // Narxni to'g'ri hisoblash (basePriceUsd * qty)
+          return `${i.qty} x ${i.name}${i.option_str} (${formatPrice(i.price_usd * i.qty)})`; 
+      }).join('\n');
+      
+      const checkoutMessage = `${translations[lang].your_cart}\n\n${orderText}\n\n${translations[lang].total}: ${formatPrice(order.total_usd)}`;
+
+      if (tg && tg.sendData){
+        try{ 
+          // Botga yuboriladigan ma'lumot (kurs bilan)
+          tg.sendData(JSON.stringify({...order, usd_rate: usdSellRate})); 
+          showTinyNotif(translations[lang].order_success); 
+        }
+        catch(e){ 
+          console.warn('Telegram sendData failed:', e); 
+          alert(translations[lang].order_success + ' (Data not sent to bot)'); 
+        }
+      } else {
+        alert(translations[lang].order_success + '\n\n' + checkoutMessage);
+      }
+      
+      // Clear cart after checkout
+      cart = []; localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartCount(); renderFloatingCart(); renderCartList();
+    }
+
+    // small notification
+    function showTinyNotif(text){
+      let n = document.getElementById('tiny-notif');
+      if (!n) {
+          n = document.createElement('div');
+          n.id = 'tiny-notif';
+          n.style.position='fixed'; n.style.right='16px'; n.style.bottom='90px';
+          n.style.background='linear-gradient(90deg,var(--green-500),var(--green-700))'; n.style.color='white';
+          n.style.padding='10px 14px'; n.style.borderRadius='12px'; n.style.boxShadow='0 12px 30px rgba(0,200,83,0.16)'; n.style.zIndex=9999;
+          n.setAttribute('role', 'alert'); // Accessibility improvement
+          n.setAttribute('aria-live', 'assertive'); // Accessibility improvement
+          document.body.appendChild(n);
+      }
+      n.innerText = text;
+      n.style.opacity = '1';
+      
+      clearTimeout(n.timer);
+      n.timer = setTimeout(()=> n.style.opacity='0', 1800);
+      setTimeout(()=> n.remove(), 2400);
+    }
+
+    // small accessibility: ESC to close modals
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape'){
+        if (productModal.style.display === 'flex') closeModal();
+        else if (cartModal.style.display === 'flex') closeCartModal();
+      }
+    });
+
+    // Save on unload (optional, redundant with function calls but harmless)
+    window.addEventListener('beforeunload', ()=> {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+    });
+
+    // expose helpers for debugging (optional)
+    window.ecoprom = { products, cart, favs, renderProducts, usdSellRate };
+  </script>
+</body>
+</html>

@@ -785,54 +785,187 @@
 
 
   // PANELLLL
-  {id:22, name:{uz:'Yashirin Zamokli PIR Panel',ru:'Потайная PIR панель с замковым соединением',en:'Hidden lock PIR panel'}, price:27, category:'panel', images:['https://i.ibb.co/NdFPCV5Y/23.png'], short:{uz:'Zamonaviy dizayn',ru:'Современный дизайн',en:'Modern design'}, desc:{uz:'Sandwich panel · Ramka: Alyuminiy',ru:'Сэндвич панель · Алюминиевая рама',en:'Sandwich panel · Aluminum frame'}, warranty:'6 oy',stock:3, sku:'DR-F18',
-  // ✅ O'ZGARISH: Razmer opsiyalarini qo'shish
-    options: [
-        { type: 'size', name: {uz: 'O‘lcham', ru: 'Размер', en: 'Size'}, values: [
-            // ... (mavjud o'lchamlar)
-            { value: '5cm', price_adjust: 0 },
-            { value: '8cm', price_adjust: 2 }, 
-            
-        ]},
-        // ✅ YANGI QO'SHILDI: Rang opsiyasi
-        { type: 'color', name: {uz: 'Rang', ru: 'Цвет', en: 'Color'}, values: [
-            { value: 'Barcha ranglar mavjud', price_adjust: 0 } 
-        ]}
-    ]
-},
-
-  {id:23, name:{uz:'PUR Panel',ru:'PUR Панель',en:'PUR Panel'}, price:27, category:'panel', images:['https://i.ibb.co/B51h8gCm/22.png'], short:{uz:'Soddaligi va chidamliligi bilan ajraladi',ru:'Простая и прочная',en:'Simple and durable'}, desc:{uz:'Ramka: Alyuminiy · Mexanizm: Xitoy',ru:'Алюминиевая рама · Китайский механизм',en:'Aluminum frame · Chinese mechanism'}, warranty:'6 oy',stock:3, sku:'DR-F19',
-  options: [
-        // 1. O'lcham opsiyasi (Size)
-        { type: 'size', name: {uz: 'O‘lcham', ru: 'Размер', en: 'Size'}, values: [
-            // ... (mavjud o'lchamlar)
-            { value: '5cm', price_adjust: 0 },
-            { value: '8cm', price_adjust: 2 }, 
-            { value: '10cm', price_adjust: 35 }, 
-            { value: '15cm', price_adjust: 43 },
-        ]},
-        // ✅ 2. Qulf turi opsiyasi (Lock Type)
-        { type: 'lock_type', name: {uz: 'Qulf turi', ru: 'Тип замка', en: 'Lock Type'}, values: [
-            { value: 'Zamokli', price_adjust: 0 },
-            { value: 'Zamoksiz', price_adjust: 15 } // Zamoq qo'shilishi uchun +$15
-        ]},
-        // ✅ YANGI QO'SHILDI: Rang opsiyasi
-        { type: 'color', name: {uz: 'Rang', ru: 'Цвет', en: 'Color'}, values: [
-            { value: 'Barcha ranglar mavjud', price_adjust: 0 } 
-        ]}
-    ]
-
-}, 
-
-  {id:24, name:{uz:'Panel',ru:'Panel',en:'Panel'}, price:100, category:'panel', images:['https://i.ibb.co/1jsNDYx/21.png'], short:{uz:'Issiqlikni yaxshi saqlaydi',ru:'Хорошо сохраняет тепло',en:'Keeps heat well'}, desc:{uz:'Sandwich panel · Yengil konstruktsiya',ru:'Сэндвич панель · Лёгкая конструкция',en:'Sandwich panel · Lightweight construction'}, warranty:'6 oy',stock:3, sku:'DR-F20',
-  options: [
-    { type: 'color', name: {uz: 'Rang', ru: 'Цвет', en: 'Color'}, values: [
-            { value: 'Barcha ranglar mavjud', price_adjust: 0 } 
-        ]}
-  ]
-},
-
-  
+              
+                {
+                  "id": 22,
+                  "name": {
+                    "uz": "Yashirin Zamokli PIR Panel",
+                    "ru": "Потайная PIR панель с замковым соединением",
+                    "en": "Hidden lock PIR panel"
+                  },
+                  "price": 27,
+                  "category": "panel",
+                  "images": ["https://i.ibb.co/NdFPCV5Y/23.png"],
+                  "short": {
+                    "uz": "Zamonaviy dizayn",
+                    "ru": "Современный дизайн",
+                    "en": "Modern design"
+                  },
+                  "desc": {
+                    "uz": "Sandwich panel · Ramka: Alyuminiy",
+                    "ru": "Сэндвич панель · Алюминиевая рама",
+                    "en": "Sandwich panel · Aluminum frame"
+                  },
+                  "warranty": "6 oy",
+                  "stock": 3,
+                  "sku": "DR-F18",
+                  "options": [
+                    {
+                      "type": "size",
+                      "name": { "uz": "O‘lcham", "ru": "Размер", "en": "Size" },
+                      "values": [
+                        { 
+                          "value": { "uz": "5cm", "ru": "5см", "en": "5cm" }, 
+                          "price_adjust": 0 
+                        },
+                        { 
+                          "value": { "uz": "8cm", "ru": "8см", "en": "8cm" }, 
+                          "price_adjust": 2 
+                        }
+                      ]
+                    },
+                    {
+                      "type": "color",
+                      "name": { "uz": "Rang", "ru": "Цвет", "en": "Color" },
+                      "values": [
+                        { 
+                          "value": {
+                            "uz": "Barcha ranglar mavjud",
+                            "ru": "Все цвета в наличии",
+                            "en": "All colors available"
+                          }, 
+                          "price_adjust": 0 
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 23,
+                  "name": {
+                    "uz": "PUR Panel",
+                    "ru": "PUR Панель",
+                    "en": "PUR Panel"
+                  },
+                  "price": 27,
+                  "category": "panel",
+                  "images": ["https://i.ibb.co/B51h8gCm/22.png"],
+                  "short": {
+                    "uz": "Soddaligi va chidamliligi bilan ajraladi",
+                    "ru": "Простая и прочная",
+                    "en": "Simple and durable"
+                  },
+                  "desc": {
+                    "uz": "Ramka: Alyuminiy · Mexanizm: Xitoy",
+                    "ru": "Алюминиевая рама · Китайский механизм",
+                    "en": "Aluminum frame · Chinese mechanism"
+                  },
+                  "warranty": "6 oy",
+                  "stock": 3,
+                  "sku": "DR-F19",
+                  "options": [
+                    {
+                      "type": "size",
+                      "name": { "uz": "O‘lcham", "ru": "Размер", "en": "Size" },
+                      "values": [
+                        { 
+                          "value": { "uz": "5cm", "ru": "5см", "en": "5cm" }, 
+                          "price_adjust": 0 
+                        },
+                        { 
+                          "value": { "uz": "8cm", "ru": "8см", "en": "8cm" }, 
+                          "price_adjust": 2 
+                        },
+                        { 
+                          "value": { "uz": "10cm", "ru": "10см", "en": "10cm" }, 
+                          "price_adjust": 35 
+                        },
+                        { 
+                          "value": { "uz": "15cm", "ru": "15см", "en": "15cm" }, 
+                          "price_adjust": 43 
+                        }
+                      ]
+                    },
+                    {
+                      "type": "lock_type",
+                      "name": { "uz": "Qulf turi", "ru": "Тип замка", "en": "Lock Type" },
+                      "values": [
+                        { 
+                          "value": {
+                            "uz": "Zamokli", 
+                            "ru": "С замком", 
+                            "en": "With Lock"
+                          }, 
+                          "price_adjust": 0 
+                        },
+                        { 
+                          "value": {
+                            "uz": "Zamoksiz", 
+                            "ru": "Без замка", 
+                            "en": "Without Lock"
+                          }, 
+                          "price_adjust": 15 
+                        }
+                      ]
+                    },
+                    {
+                      "type": "color",
+                      "name": { "uz": "Rang", "ru": "Цвет", "en": "Color" },
+                      "values": [
+                        { 
+                          "value": {
+                            "uz": "Barcha ranglar mavjud",
+                            "ru": "Все цвета в наличии",
+                            "en": "All colors available"
+                          },
+                          "price_adjust": 0 
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 24,
+                  "name": {
+                    "uz": "Panel",
+                    "ru": "Панель",
+                    "en": "Panel"
+                  },
+                  "price": 100,
+                  "category": "panel",
+                  "images": ["https://i.ibb.co/1jsNDYx/21.png"],
+                  "short": {
+                    "uz": "Issiqlikni yaxshi saqlaydi",
+                    "ru": "Хорошо сохраняет тепло",
+                    "en": "Keeps heat well"
+                  },
+                  "desc": {
+                    "uz": "Sandwich panel · Yengil konstruktsiya",
+                    "ru": "Сэндвич панель · Лёгкая конструкция",
+                    "en": "Sandwich panel · Lightweight construction"
+                  },
+                  "warranty": "6 oy",
+                  "stock": 3,
+                  "sku": "DR-F20",
+                  "options": [
+                    {
+                      "type": "color",
+                      "name": { "uz": "Rang", "ru": "Цвет", "en": "Color" },
+                      "values": [
+                        { 
+                          "value": {
+                            "uz": "Barcha ranglar mavjud",
+                            "ru": "Все цвета в наличии",
+                            "en": "All colors available"
+                          },
+                          "price_adjust": 0 
+                        }
+                      ]
+                    }
+                  ]
+                }
+              
+                
 ];
 
 
@@ -1232,72 +1365,67 @@
       modalStockSpan.innerText = activeProduct.stock > 0 ? STOCK_TEXT[lang].in : STOCK_TEXT[lang].out;
       
       // ✅ O'ZGARISH: Opsiyalar/Razmerlarni ko'rsatish
-      modalOptionsDiv.innerHTML = ''; // Oldingi elementlarni tozalash
-      if (activeProduct.options && activeProduct.options.length > 0) {
-        let optionsHtml = '';
-        activeProduct.options.forEach(option => {
-            const optName = translations[lang][option.type] || option.name[lang] || option.name.uz;
+      // index.html da mavjud: // Product modal window.openProductModal = function(id){...} ichida:
+
+// ... (boshqa kod) ...
+
+// Options (Variants)
+modalOptionsDiv.innerHTML = '';
+let optionsHtml = '';
+
+if (activeProduct.options && activeProduct.options.length > 0) {
+    activeProduct.options.forEach(option => {
+        // Option nomi (O'lcham, Rang, Qulf turi) joriy tilda ko'rsatiladi
+        const optName = translations[lang][option.type] || option.name[lang] || option.name.uz; 
+        let valuesHtml = '';
+
+        option.values.forEach((val, index) => {
+            // ✅ FIX 1: Ekranda ko'rsatish uchun joriy tildagi matnni olish
+            const optionDisplay = val.value[lang] || val.value.uz;
+            // ✅ FIX 2: Radio tugmasi qiymati va keyinchalik kuzatish uchun ID sifatida O'zbek tilidagi matnni ishlatish
+            const optionId = val.value.uz; 
+
+            // Setting default selected option
+            if (index === 0) {
+                selectedOptions[option.type] = optionId; // ID ni tanlov sifatida o'rnatish
+            }
             
-            // ✅ RANG (COLOR) UCHUN MAXSUS HTML QISM
-            if (option.type === 'color') {
-                const colorValue = option.values?.[0]?.value || translations[lang].color_default_value;
-                selectedOptions[option.type] = colorValue; 
-                optionsHtml += `
-                    <div style="margin-bottom:12px">
-                        <div style="font-weight:700;margin-bottom:6px">${optName}</div>
-                        <p style="margin:0;font-weight: 600; color: #333;">${escapeHtml(colorValue)}</p>
-                    </div>
-                `;
-            } else {
-                // Boshqa variantlar (SIZE, LOCK_TYPE) uchun Radio/Tanlash qismi
-                let valuesHtml = '';
-                
-                option.values.forEach((val, index) => {
-                    // Birinchi variantni default qilib belgilash
-                    if(index === 0) {
-                        selectedOptions[option.type] = val.value; 
-                    }
-                    
-                    // Price adjust ko'rsatish 
-                    const adjustValue = val.price_adjust || 0;
-                    let adjustText = '';
-                    if (adjustValue > 0) adjustText = ` (+${formatPrice(adjustValue)})`;
-                    else if (adjustValue < 0) adjustText = ` (${formatPrice(adjustValue)})`;
-                    
-                    // Radio tugmasi sifatida render qilish
-                    valuesHtml += `
-                        <label style="display:inline-flex;align-items:center;margin-right:12px;cursor:pointer;margin-top:4px">
-                            <input type="radio" name="${option.type}" value="${val.value}" data-price-adjust="${adjustValue}" 
-                                ${index === 0 ? 'checked' : ''} 
-                                onchange="selectOption('${option.type}', this.value, parseFloat(this.getAttribute('data-price-adjust')))">
-                            <span style="margin-left:4px;font-size:14px">${val.value}${adjustText}</span>
-                        </label>
-                    `;
-                });
-                optionsHtml += `
-                    <div style="margin-bottom:12px">
-                        <div style="font-weight:700;margin-bottom:6px">${optName}</div>
-                        <div style="display:flex;flex-wrap:wrap">${valuesHtml}</div>
-                    </div>
-                `;
-            }
+            // Price adjust ko'rsatish
+            const adjustValue = val.price_adjust || 0;
+            let adjustText = '';
+            // Narxni valyuta formatida ko'rsatish
+            if (adjustValue > 0) adjustText = ` (+${formatPrice(adjustValue)})`;
+            else if (adjustValue < 0) adjustText = ` (${formatPrice(adjustValue)})`;
+
+            // Radio tugmasi sifatida render qilish
+            valuesHtml += ` <label style="display:inline-flex;align-items:center;margin-right:12px;cursor:pointer;margin-top:4px">
+                <input type="radio" name="${option.type}" value="${optionId}" data-price-adjust="${adjustValue}" ${index === 0 ? 'checked' : ''} onchange="selectOption('${option.type}', this.value, parseFloat(this.getAttribute('data-price-adjust')))">
+                <span style="margin-left:4px;font-size:14px">${optionDisplay}${adjustText}</span>
+            </label> `;
         });
-        modalOptionsDiv.innerHTML = optionsHtml;
-        
-        // Boshlang'ich narxni hisoblash uchun barcha default tanlangan optionlarning narx ta'sirini jamlash
-        currentPriceAdjustment = 0;
-        activeProduct.options.forEach(option => {
-            const defaultValue = selectedOptions[option.type];
-            if (defaultValue) {
-                const selectedValue = option.values.find(v => v.value === defaultValue);
-                if (selectedValue) {
-                    currentPriceAdjustment += (selectedValue.price_adjust || 0);
-                }
+        optionsHtml += ` <div style="margin-bottom:12px">
+            <div style="font-weight:700;margin-bottom:6px">${optName}</div>
+            <div style="display:flex;flex-wrap:wrap">${valuesHtml}</div>
+        </div> `;
+    });
+    modalOptionsDiv.innerHTML = optionsHtml;
+
+    // Boshlang'ich narxni qayta hisoblash: 
+    // Faqat yuqoridagi selectedOptions va selectOption funksiyasiga tayanadi.
+    currentPriceAdjustment = 0; 
+    activeProduct.options.forEach(option => {
+        const defaultValue = selectedOptions[option.type];
+        if (defaultValue) {
+            // FIX: ID bo'yicha qidirish
+            const selectedValue = option.values.find(v => v.value.uz === defaultValue); 
+            if (selectedValue) {
+                currentPriceAdjustment += (selectedValue.price_adjust || 0);
             }
-        });
-        
-        updateModalTotal(); // Variantlar tanlanganidan keyin umumiy narxni yana bir bor yangilash
-      }
+        }
+    });
+    updateModalTotal(); // Umumiy narxni yangilash
+}
+// ... (boshqa kod) ...
       
       // SPECS (Optimized: uses activeProduct.specs)
       modalSpecs.innerHTML = '';
@@ -1612,5 +1740,3 @@
 </body>
 
 </html>
-
-
